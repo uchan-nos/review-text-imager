@@ -1,0 +1,41 @@
+#!/usr/bin/python3
+
+import argparse
+import sys
+
+
+def log_error(msg, code=1):
+    print(msg, file=sys.stderr)
+    sys.exit(code)
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("review_file", help="path to a .re file")
+    parser.add_argument("image_id", help="ID of the image")
+    ns = parser.parse_args()
+
+    with open(ns.review_file) as f:
+        for line in f:
+            if not line.startswith("//image"):
+                continue
+
+            if "[{}]".format(ns.image_id) in line:
+                break
+        else:
+            log_error("image_id '{}' not found".format(ns.image_id))
+
+        image_body = []
+        for line in f:
+            if line.startswith("//}"):
+                break
+
+            image_body.append(line)
+        else:
+            log_error("block end '//}' not found")
+
+    print("".join(image_body), end="")
+
+
+if __name__ == "__main__":
+    main()

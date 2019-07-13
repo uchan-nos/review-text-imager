@@ -1,0 +1,42 @@
+#!/usr/bin/python3
+
+import argparse
+from subprocess import run, PIPE
+from os.path import exists, join
+import sys
+
+
+def log_error(msg, code=1):
+    print(msg, file=sys.stderr)
+    sys.exit(code)
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--fontsize", type=int, default=20)
+    parser.add_argument("--font", default="IPAゴシック")
+    parser.add_argument("--color", default="black")
+    parser.add_argument("--image-dir", default="images")
+    parser.add_argument("--force", action="store_true")
+    parser.add_argument("chapter", help="chapter name")
+    parser.add_argument("image_id", help="ID of the image")
+    ns = parser.parse_args()
+
+    outfilename = join(ns.image_dir, ns.image_id + ".png")
+    if not ns.force and exists(outfilename):
+        log_error("already exists: " + outfilename)
+
+    image_text = run(
+        ["extract-image-body", ns.chapter, ns.image_id],
+        check=True, stdout=PIPE).stdout
+    run(
+        ["text2png",
+         "--fontsize", str(ns.fontsize),
+         "--output", outfilename,
+         "--font", ns.font,
+         "--color", ns.color],
+        check=True, input=image_text)
+
+
+if __name__ == "__main__":
+    main()
