@@ -2,6 +2,7 @@
 
 import argparse
 import sys
+from os.path import exists
 
 
 def log_error(msg, code=1):
@@ -14,6 +15,9 @@ def main():
     parser.add_argument("review_file", help="path to a .re file")
     parser.add_argument("image_id", help="ID of the image")
     ns = parser.parse_args()
+
+    if not exists(ns.review_file):
+        log_error("no such review file: " + ns.review_file)
 
     with open(ns.review_file) as f:
         for line in f:

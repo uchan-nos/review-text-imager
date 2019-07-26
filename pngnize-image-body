@@ -18,7 +18,7 @@ def main():
     parser.add_argument("--color", default="black")
     parser.add_argument("--image-dir", default="images")
     parser.add_argument("--force", action="store_true")
-    parser.add_argument("chapter", help="chapter name")
+    parser.add_argument("review_file", help="path to a .re file")
     parser.add_argument("image_id", help="ID of the image")
     ns = parser.parse_args()
 
@@ -26,8 +26,11 @@ def main():
     if not ns.force and exists(outfilename):
         log_error("already exists: " + outfilename)
 
+    if not exists(ns.review_file):
+        log_error("no such review file: " + ns.review_file)
+
     image_text = run(
-        ["extract-image-body", ns.chapter, ns.image_id],
+        ["extract-image-body", ns.review_file, ns.image_id],
         check=True, stdout=PIPE).stdout
     run(
         ["text2png",
