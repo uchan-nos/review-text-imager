@@ -38,7 +38,7 @@ review-text-imager の依存パッケージをインストールします。
 次に review-text-imager をダウンロードし，各コマンドをパスの通ったところに置くかシンボリックリンクを張ります。
 
     $ git clone https://github.com/uchan-nos/review-text-imager.git
-    $ GITDIR=$PWD
+    $ GITDIR=$PWD/review-text-imager
     $ cd path/to/somewhere
     $ ln -s $GITDIR/pngnize-image-body ./
     $ ln -s $GITDIR/extract-image-body ./
